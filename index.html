@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>NeoGlass · graphic designer</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <!-- Google Fonts: high‑tech + clean -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ---------- RESET / VARIABLES / GLOBAL ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --glass-bg: rgba(8, 20, 36, 0.35);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-card-bg: rgba(12, 25, 45, 0.45);
+      --accent-cyan: #00f0ff;
+      --accent-purple: #b77aff;
+      --accent-glow: rgba(0, 240, 255, 0.6);
+      --neon-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+      --dark-bg: #070c15;
+      --text-light: #eef5ff;
+      --text-dim: rgba(238, 245, 255, 0.75);
+      --border-rad: 24px;
+      --border-rad-sm: 18px;
+      --font-body: 'Inter', sans-serif;
+      --font-head: 'Space Grotesk', sans-serif;
+      --transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--dark-bg);
+      color: var(--text-light);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ------ animated background : deep tech gradients + floating blobs (glass blur) ------ */
+    .bg-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.25;
+      animation: float 30s infinite alternate ease-in-out;
+    }
+
+    .blob1 {
+      width: 60vmax;
+      height: 60vmax;
+      background: radial-gradient(circle, #2b4b6e, #112235);
+      top: -20vh;
+      right: -10vw;
+      animation-duration: 35s;
+    }
+
+    .blob2 {
+      width: 70vmin;
+      height: 70vmin;
+      background: radial-gradient(circle, #3a1e4a, #0f0c1f);
+      bottom: 5vh;
+      left: -10vw;
+      filter: blur(90px);
+      opacity: 0.2;
+      animation-duration: 40s;
+    }
+
+    .blob3 {
+      width: 40vmax;
+      height: 40vmax;
+      background: radial-gradient(circle, #005f73, #0a1a2e);
+      bottom: 20vh;
+      right: 15vw;
+      filter: blur(100px);
+      opacity: 0.18;
+      animation-duration: 25s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(5%, 8%) scale(1.2); }
+    }
+
+    /* ------ subtle grid overlay (high‑tech) ------ */
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* ------ GLASS CARD core style ------ */
+    .glass-card {
+      background: var(--glass-card-bg);
+      backdrop-filter: blur(15px) saturate(180%);
+      -webkit-backdrop-filter: blur(15px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-rad);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+      transition: var(--transition);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(0, 240, 255, 0.35);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 18px var(--accent-glow);
+      transform: translateY(-6px);
+    }
+
+    /* ------ layout container ------ */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 30px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ------ navigation (glass, sticky) ------ */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 36px;
+      margin-top: 25px;
+      border-radius: 60px;
+      background: rgba(8, 20, 36, 0.5);
+      backdrop-filter: blur(16px) saturate(200%);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .logo {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1.9rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .logo span {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 44px;
+      font-weight: 500;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      transition: var(--transition);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      transition: 0.3s;
+    }
+    .nav-links a:hover {
+      color: white;
+      text-shadow: 0 0 8px var(--accent-cyan);
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* ------ hero section ------ */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      padding: 60px 0 40px;
+    }
+
+    .hero-content h1 {
+      font-family: var(--font-head);
+      font-size: 4.2rem;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    .glitch {
+      background: linear-gradient(145deg, #fff, #b0e0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 18px rgba(0,240,255,0.33);
+    }
+    .hero-highlight {
+      color: var(--accent-cyan);
+      border-bottom: 2px solid var(--accent-cyan);
+      box-shadow: 0 4px 10px rgba(0,240,255,0.2);
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-dim);
+      margin-bottom: 35px;
+      max-width: 90%;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 20px;
+    }
+    .btn {
+      padding: 14px 38px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.5px;
+    }
+    .btn-primary {
+      background: linear-gradient(145deg, rgba(0,240,255,0.2), rgba(183,122,255,0.2));
+      border: 1px solid var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(0,240,255,0.25);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(145deg, rgba(0,240,255,0.35), rgba(183,122,255,0.35));
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 30px rgba(0,240,255,0.45);
+      transform: scale(1.05);
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: white;
+      transform: scale(1.05);
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .glass-orb {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(0,240,255,0.25), rgba(30,20,60,0.5));
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0,240,255,0.45);
+      box-shadow: 0 0 70px rgba(0,240,255,0.25);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 6rem;
+      color: rgba(255,255,255,0.9);
+      animation: pulseGlow 5s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 50px rgba(0,240,255,0.2); border-color: rgba(0,240,255,0.4); }
+      100% { box-shadow: 0 0 90px rgba(183,122,255,0.4); border-color: rgba(183,122,255,0.7); }
+    }
+
+    /* ------ section headers ------ */
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .section-sub {
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 6px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: var(--font-head);
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #ffffff, #b1d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ------ services grid ------ */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      margin-bottom: 80px;
+    }
+    .service-item {
+      padding: 40px 25px;
+      text-align: center;
+      border-radius: var(--border-rad);
+    }
+    .service-item i {
+      font-size: 2.9rem;
+      background: linear-gradient(145deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+    .service-item h3 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .service-item p {
+      color: var(--text-dim);
+    }
+
+    /* ------ portfolio grid (glass) ------ */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin-bottom: 80px;
+    }
+    .portfolio-card {
+      border-radius: var(--border-rad);
+      padding: 30px 20px;
+      background: rgba(15, 30, 50, 0.4);
+      backdrop-filter: blur(15px);
+      transition: var(--transition);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    .portfolio-img {
+      width: 100%;
+      height: 200px;
+      background: radial-gradient(circle at 20% 30%, #123546, #0c1622);
+      border-radius: 20px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: rgba(0,240,255,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: var(--transition);
+    }
+    .portfolio-card:hover .portfolio-img {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 35px rgba(0,240,255,0.3);
+      color: rgba(0,240,255,1);
+    }
+    .portfolio-card h3 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .portfolio-tag {
+      color: var(--accent-cyan);
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+
+    /* ------ contact / glass form ------ */
+    .contact-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      margin-bottom: 100px;
+      background: rgba(5, 15, 30, 0.3);
+      backdrop-filter: blur(15px);
+      border-radius: 48px;
+      padding: 50px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .contact-info i {
+      font-size: 2.8rem;
+      background: linear-gradient(145deg, #00f0ff, #b77aff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+    .glass-input {
+      width: 100%;
+      padding: 16px 22px;
+      margin-bottom: 25px;
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50px;
+      font-size: 1.1rem;
+      color: white;
+      transition: var(--transition);
+    }
+    .glass-input:focus {
+      border-color: var(--accent-cyan);
+      outline: none;
+      box-shadow: 0 0 25px rgba(0,240,255,0.2);
+      background: rgba(10, 25, 45, 0.6);
+    }
+    .glass-input::placeholder {
+      color: rgba(200, 220, 255, 0.5);
+    }
+
+    /* ------ footer ------ */
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      backdrop-filter: blur(8px);
+      margin-top: 30px;
+    }
+
+    /* ------ animations: fade-in on scroll (intersection observer) ------ */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.3, 1), transform 0.8s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+    .fade-up.appear {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ------ responsive design ------ */
+    @media screen and (max-width: 1100px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .hero p { margin-left: auto; margin-right: auto; }
+      .hero-cta { justify-content: center; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+      .contact-section { grid-template-columns: 1fr; }
+    }
+
+    @media screen and (max-width: 768px) {
+      nav { flex-direction: column; gap: 20px; padding: 20px; }
+      .nav-links { gap: 28px; }
+      .hero-content h1 { font-size: 2.8rem; }
+      .section-title { font-size: 2.2rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .portfolio-grid { grid-template-columns: 1fr; }
+      .glass-orb { width: 240px; height: 240px; font-size: 4rem; }
+      .container { padding: 0 20px; }
+      .contact-section { padding: 30px 20px; }
+    }
+
+    @media screen and (max-width: 480px) {
+      .nav-links { gap: 18px; flex-wrap: wrap; justify-content: center; }
+      .hero-content h1 { font-size: 2.2rem; }
+    }
+
+    /* ------ custom cursor / high-tech accent (optional) ------ */
+    ::selection {
+      background: rgba(0, 240, 255, 0.3);
+    }
+    /* width */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0b131f; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(#00f0ff, #b77aff); border-radius: 12px; }
+  </style>
+</head>
+<body>
+  <!-- FLOATING BLUR SHAPES (behind glass) -->
+  <div class="bg-shapes">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+  </div>
+  <div class="grid-overlay"></div>
+
+  <!-- MAIN CONTAINER -->
+  <div class="container">
+    <!-- GLASS NAVIGATION -->
+    <nav class="glass-card" style="border-radius: 60px; margin-bottom: 20px;">
+      <div class="logo"><span>✦</span> NEO<span>GLASS</span></div>
+      <div class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Work</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+      </div>
+    </nav>
+
+    <!-- HERO SECTION (fade animation) -->
+    <div class="hero fade-up">
+      <div class="hero-content">
+        <h1 class="glitch">
+          Where <span class="hero-highlight">pixels</span><br>meet glass.
+        </h1>
+        <p>High‑tech graphic design with a futuristic edge. I craft digital experiences that live in the intersection of minimalism and cyberpunk.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary"><i class="fas fa-bolt"></i> View projects</button>
+          <button class="btn btn-outline"><i class="fas fa-pen-nib"></i> Let's talk</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="glass-orb">
+          <i class="fas fa-cubes"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- SERVICES SECTION -->
+    <div class="section-header fade-up">
+      <div class="section-sub">EXPERTISE</div>
+      <h2 class="section-title">glass-grade services</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-item glass-card fade-up">
+        <i class="fas fa-paint-brush"></i>
+        <h3>Brand Identity</h3>
+        <p>Logos, color systems, immersive visual language — pure glass aesthetic.</p>
+      </div>
+      <div class="service-item glass-card fade-up">
+        <i class="fas fa-cube"></i>
+        <h3>3D & Motion</h3>
+        <p>Cinematic renders, kinetic typography, holographic loops.</p>
+      </div>
+      <div class="service-item glass-card fade-up">
+        <i class="fas fa-mobile-alt"></i>
+        <h3>UI/UX design</h3>
+        <p>Fluid interfaces with glassmorphism & high‑tech interaction.</p>
+      </div>
+      <div class="service-item glass-card fade-up">
+        <i class="fas fa-shapes"></i>
+        <h3>Generative art</h3>
+        <p>Code‑driven visuals, NFT collections, experimental graphics.</p>
+      </div>
+    </div>
+
+    <!-- PORTFOLIO (glass featured projects) -->
+    <div class="section-header fade-up">
+      <div class="section-sub">SELECTED WORKS</div>
+      <h2 class="section-title">glass collection</h2>
+    </div>
+    <div class="portfolio-grid">
+      <div class="portfolio-card glass-card fade-up">
+        <div class="portfolio-img">
+          <i class="fas fa-atom"></i>
+        </div>
+        <h3>CYBER•EDEN</h3>
+        <span class="portfolio-tag">BRANDING / 3D</span>
+      </div>
+      <div class="portfolio-card glass-card fade-up">
+        <div class="portfolio-img">
+          <i class="fas fa-wand-magic-sparkles"></i>
+        </div>
+        <h3>LUMINA</h3>
+        <span class="portfolio-tag">MOTION / INSTALL</span>
+      </div>
+      <div class="portfolio-card glass-card fade-up">
+        <div class="portfolio-img">
+          <i class="fas fa-border-all"></i>
+        </div>
+        <h3>FRACTAL</h3>
+        <span class="portfolio-tag">UI / GENERATIVE</span>
+      </div>
+    </div>
+
+    <!-- CONTACT : glass morph form -->
+    <div class="contact-section glass-card fade-up" style="border-radius: 48px;">
+      <div class="contact-info">
+        <i class="fas fa-envelope-open-text"></i>
+        <h2 style="font-size: 2.2rem; font-weight: 700; margin-bottom: 15px;">Let's create<br>something <span style="color:var(--accent-cyan);">crystal</span>.</h2>
+        <p style="color:var(--text-dim); font-size: 1.2rem; margin-bottom: 25px;">Got a project? Reach out via cosmic waves.</p>
+        <div style="display: flex; gap: 25px; font-size: 1.8rem;">
+          <i class="fab fa-behance" style="color:var(--accent-cyan);"></i>
+          <i class="fab fa-dribbble" style="color:var(--accent-cyan);"></i>
+          <i class="fab fa-instagram" style="color:var(--accent-purple);"></i>
+          <i class="fab fa-linkedin" style="color:var(--accent-cyan);"></i>
+        </div>
+      </div>
+      <div>
+        <input type="text" placeholder="full name" class="glass-input" style="border-radius: 60px;">
+        <input type="email" placeholder="email address" class="glass-input" style="border-radius: 60px;">
+        <textarea placeholder="your message" rows="3" class="glass-input" style="border-radius: 30px; resize: none;"></textarea>
+        <button class="btn btn-primary" style="width: 100%; border-radius: 60px; padding: 18px; font-size: 1.2rem;"><i class="fas fa-paper-plane"></i> Transmit</button>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="fade-up">
+      <p style="color: rgba(255,255,255,0.5);">© 2025 NeoGlass — high‑tech designer portfolio.  all glass, no filler.</p>
+      <p style="color: rgba(255,255,255,0.5);">Design & Developed by <a href="https://mohammadullah.netlify.app/"><b style="color: var(--accent-cyan);">Mohammadullah Al Hanafi</b></a></p>
+      <div style="margin-top: 18px; font-size: 0.9rem; letter-spacing: 3px;">
+        <span style="color: var(--accent-cyan);">✦</span> RESPONSIVE <span style="color: var(--accent-purple);">✦</span> ANIMATED <span style="color: var(--accent-cyan);">✦</span> GLASS CORE
+      </div>
+    </footer>
+  </div>
+  
+  <!-- INTERSECTION OBSERVER : SCROLL REVEAL (vanilla) -->
+  <script>
+    (function() {
+      "use strict";
+
+      // fade up elements
+      const faders = document.querySelectorAll('.fade-up');
+      
+      if (faders.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('appear');
+              // optional: unobserve after animation to reduce load
+              observer.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.2,
+          rootMargin: '0px 0px -40px 0px' // subtle offset
+        });
+
+        faders.forEach(el => observer.observe(el));
+      }
+
+      // additional tech animation: make glass orb rotate slightly on mousemove? (optional micro interaction)
+      const orb = document.querySelector('.glass-orb');
+      if (orb) {
+        document.addEventListener('mousemove', (e) => {
+          const x = (e.clientX / window.innerWidth - 0.5) * 10;
+          const y = (e.clientY / window.innerHeight - 0.5) * 10;
+          orb.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+      }
+
+      // simulate smooth "transmit" button alert (just playful)
+      const transmitBtn = document.querySelector('.contact-section .btn-primary');
+      if (transmitBtn) {
+        transmitBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          // just a high‑tech feel – no actual form
+          alert('📡 message transmitted · thank you for reaching out through the glass.');
+        });
+      }
+
+      // make portfolio cards interactive (add haptic feel)
+      const cards = document.querySelectorAll('.portfolio-card, .service-item');
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.transition = 'all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1)';
+        });
+      });
+      
+    })();
+  </script>
+
+  <!-- subtle extra: auto-fade for hero appears immediately, but observer will also fire -->
+  <style>
+    /* ensure that hero also fades in but observer will catch it; 
+    but for instant hero we can set appear manually? */
+    .hero.fade-up.appear { opacity: 1; transform: translateY(0); }
+  </style>
+  <script>
+    /* but observer will make it appear if visible – also we can force check after load */
+    window.addEventListener('load', function() {
+      const hero = document.querySelector('.hero');
+      if (hero && hero.classList.contains('fade-up')) {
+        /* if hero is already visible on load, observer may not trigger if threshold? */
+        const rect = hero.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.8) {
+          hero.classList.add('appear');
+        }
+      }
+      // also manually trigger for any elements visible on load
+      document.querySelectorAll('.fade-up').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.9) {
+          el.classList.add('appear');
+        }
+      });
+    });
+  </script>
+  <!-- manual fix: add appear to elements already visible before observer kicks -->
+  <script>
+    (function immediateAppear() {
+      // for elements in viewport at pageload
+      const faders = document.querySelectorAll('.fade-up');
+      faders.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 50) {
+          el.classList.add('appear');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
